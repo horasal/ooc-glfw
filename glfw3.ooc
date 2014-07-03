@@ -343,6 +343,31 @@ Window: cover from GLFWwindow*{
         get{ glfwWindowShouldClose(this) as Bool }
         set(state){ glfwSetWindowShouldClose(this, state as Int) }
     }
+    
+    show: func(){
+        glfwShowWindow(this)
+    }
+
+    hide: func(){
+        glfwHideWindow(this)
+    }
+
+    restore: func(){
+        glfwRestoreWindow(this)
+    }
+
+    iconify: func(){
+        glfwIconifyWindow(this)
+    }
+
+    clipboardString: String{
+        get(text){
+            glfwSetClipboardString(this, text toCString())
+        }
+        set{
+            glfwGetClipboardString(this) toString()
+        }
+    }
 
 }
 
