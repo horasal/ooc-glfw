@@ -268,7 +268,7 @@ glfwSetErrorCallback: extern func(Pointer) -> Pointer
 glfwGetMonitors: extern func(Int*) -> GLFWmonitor** 
 glfwGetPrimaryMonitor: extern func -> GLFWmonitor* 
 glfwSetMonitorCallback: extern func(Pointer) -> Pointer
-glfwDefaultWindowHInts: extern func
+glfwDefaultWindowHints: extern func
 glfwWindowHint: extern func(Int, Int)
 glfwPollEvents: extern func
 glfwWaitEvents: extern func

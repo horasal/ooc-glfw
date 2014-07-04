@@ -10,6 +10,76 @@ Image: cover from _GLFWimage
 Gammaramp: cover from _GLFWgammaramp
 Vidmode: cover from _GLFWvidmode
 
+glfw: class{
+    init: func() { glfwInit() }
+    terminate: func() { glfwTerminate() }
+    getVersionString: func() -> String{ glfwGetVersionString() as CString toString() }
+    getVersion: func() -> (Int, Int, Int) { 
+        ma, mi, mo: Int
+        glfwGetVersion(ma&, mi&, mo&)
+        (ma, mi, mo)
+    }
+
+    onError: func(p: Pointer) -> Bool{
+        !(glfwSetErrorCallback(p) == null)
+    }
+
+    monitors: func() -> Monitor[]{
+        count: Int
+        m: Monitor[]
+        m data = glfwGetMonitors(count&)
+        m rlength = count
+        m unitSize = Monitor size
+        m
+    }
+
+    defaultWindowHints: func(){ glfwDefaultWindowHints() }
+    windowHint: func(target, hint: Int){ glfwWindowHint(target, hint) }
+    pollEvents: func() { glfwPollEvents() }
+    waitEvents: func() { glfwWaitEvents() }
+    postEmptyEvent: func() { glfwPostEmptyEvent() }
+
+    joystickPresent: func(target: Int) -> Bool{ glfwJoystickPresent(target) as Bool }
+    joystickAxes: func(joy: Int) -> Float[] {
+        count: Int
+        axes: Float[]
+        axes data = glfwGetJoystickAxes(joy, count&)
+        axes rlength = count
+        axes unitSize = Float size
+        axes
+    }
+    joystickButtons: func(joy: Int) -> UChar[]{
+        count: Int
+        r : UChar[]
+        r data = glfwGetJoystickButtons(joy, count&)
+        r rlength = count
+        r unitSize = UChar size
+        r
+    }
+    joystickName: func(joy: Int) -> String{
+        glfwGetJoystickName(joy) as CString toString()
+    }
+
+    getTime: func() -> Double{ glfwGetTime() }
+    setTime: func(t: Double){ glfwSetTime(t) }
+
+    currentContext: func -> Window{
+        glfwGetCurrentContext() as Window
+    }
+
+    setSwapInterval: func(si: Int){
+        glfwSwapInterval(si)
+    }
+
+    extensionSupported: func(name: String) -> Bool{
+        glfwExtensionSupported(name toCString() as Char*) as Bool
+    }
+
+    getProcAddress: func(name: String) -> Pointer{
+        glfwGetProcAddress(name toCString() as Char*)
+    }
+}
+
 /**
  * GLFW monitor cover
  */
@@ -139,6 +209,22 @@ Window: cover from GLFWwindow*{
     setCursor: func(cursor: Cursor){
         glfwSetCursor(this, cursor)
     }
+
+    onPos: func(p: Pointer){ glfwSetWindowPosCallback(this, p) }
+    onSize: func(p: Pointer){ glfwSetWindowSizeCallback(this, p) }
+    onClose: func(p: Pointer){ glfwSetWindowCloseCallback(this, p) }
+    onRefresh: func(p: Pointer){ glfwSetWindowRefreshCallback(this, p) }
+    onFocus: func(p: Pointer){ glfwSetWindowFocusCallback(this, p) }
+    onIconify: func(p: Pointer){ glfwSetWindowIconifyCallback(this, p) }
+    onFramebufferSize: func(p: Pointer){ glfwSetFramebufferSizeCallback(this, p) }
+    onKey: func(p: Pointer){ glfwSetKeyCallback(this, p) }
+    onChar: func(p: Pointer){ glfwSetCharCallback(this, p) }
+    onCharMods: func(p: Pointer){ glfwSetCharModsCallback(this, p) }
+    onMouseButton: func(p: Pointer){ glfwSetMouseButtonCallback(this, p) }
+    onCursorPos: func(p: Pointer){ glfwSetCursorPosCallback(this, p) }
+    onCursorEnter: func(p: Pointer){ glfwSetCursorEnterCallback(this, p) }
+    onScroll: func(p: Pointer){ glfwSetScrollCallback(this, p) }
+    onDrop: func(p: Pointer){ glfwSetDropCallback(this, p) }
 }
 
 /**

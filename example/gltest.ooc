@@ -1,25 +1,23 @@
 import gl
 import glfw3
-import native/glfw3api
 
 getKey: func(w: Window, a,b,c,d: Int) {
     a toString() println()
 }
 
 main: func(args: String[]) -> Int{
-    if (!glfwInit()) Exception new("Can not initialize glfw") throw()
-
+    pro := glfw new()
     window := Window new(640, 480, "Test", null, null)
     if(!window){
-        glfwTerminate()
+        pro terminate()
         Exception new("Cann to create window") throw()
     }
 
     window setWindowTitle("Test2")
     window makeContextCurrent()
-    glfwSetKeyCallback(window, getKey&)
+    window onKey(getKey&)
 
-    time := glfwGetTime()
+    time := pro getTime()
     frames: Int = 0
     while (!window getShouldClose()){
         ratio : Float
@@ -32,7 +30,7 @@ main: func(args: String[]) -> Int{
         glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
-        glRotatef( glfwGetTime() * 20.f, 0.f, 0.f, 1.f)
+        glRotatef( pro getTime() * 20.f, 0.f, 0.f, 1.f)
         glBegin(GL_TRIANGLES)
         glColor3f(1.f, 0.f, 0.f)
         glVertex3f(-0.6f, -0.4f, 0.f)
@@ -42,15 +40,15 @@ main: func(args: String[]) -> Int{
         glVertex3f(0.f, 0.6f, 0.f)
         glEnd()
         window swapBuffers()
-        glfwPollEvents()
+        pro pollEvents()
         frames += 1
-        if(glfwGetTime() - time > 3){
-            printf("%.3f\n" toCString(), frames / (glfwGetTime() -time))
+        if(pro getTime() - time > 3){
+            printf("%.3f\n" toCString(), frames / (pro getTime() - time))
             frames = 0
-            time = glfwGetTime()
+            time = pro getTime()
         }
     }
 
     window destroy()
-    glfwTerminate()
+    pro terminate()
 }
