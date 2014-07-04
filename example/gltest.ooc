@@ -1,27 +1,27 @@
-import gl, glfw3
+import gl
+import glfw3
+import native/glfw3api
 
-getKey: func(w: GLFWwindow*, a,b,c,d: Int) {
+getKey: func(w: Window, a,b,c,d: Int) {
     a toString() println()
 }
 
 main: func(args: String[]) -> Int{
     if (!glfwInit()) Exception new("Can not initialize glfw") throw()
 
-    window := Window create(640, 480, "Test", null, null)
+    window := Window new(640, 480, "Test", null, null)
     if(!window){
         glfwTerminate()
         Exception new("Cann to create window") throw()
     }
 
-    window title = "Test2"
-
+    window setWindowTitle("Test2")
     window makeContextCurrent()
-
     glfwSetKeyCallback(window, getKey&)
 
     time := glfwGetTime()
     frames: Int = 0
-    while (!window shouldClose){
+    while (!window getShouldClose()){
         ratio : Float
         (width, height) := window getFrameBufferSize()
         ratio = width / height
