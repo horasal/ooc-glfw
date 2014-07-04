@@ -235,10 +235,31 @@ GLFWmonitor: extern cover
 GLFWwindow: extern cover
 GLFWcursor: extern cover
 
+_GLFWvidmode: cover from GLFWvidmode{
+    width:       extern Int 
+    height:      extern Int 
+    redBits:     extern Int 
+    greenBits:   extern Int 
+    blueBits:    extern Int 
+    refreshRate: extern Int 
+}
+
+_GLFWgammaramp: cover from GLFWgammaramp{
+    red:  extern UShort* 
+    green:extern UShort* 
+    blue: extern UShort* 
+    size: extern UInt 
+}
+
+_GLFWimage: cover from GLFWimage{
+    width: extern Int 
+    height: extern Int 
+    pixels: extern UChar* 
+}
+
 /**
  * GLFW General Function
  */
-GLFWglproc: extern func
 glfwInit: extern func -> Int
 glfwTerminate: extern func
 glfwGetVersion: extern func(Int*, Int*, Int*)
@@ -261,7 +282,7 @@ glfwSetTime: extern func(Double)
 glfwGetCurrentContext: extern func -> GLFWwindow* 
 glfwSwapInterval: extern func(Int)
 glfwExtensionSupported: extern func(Char*) -> Int 
-glfwGetProcAddress: extern func(Char*)
+glfwGetProcAddress: extern func(Char*) -> Pointer
 
 glfwGetMonitorPos: extern func(GLFWmonitor*, Int*, Int*)
 glfwGetMonitorPhysicalSize: extern func(GLFWmonitor*, Int*, Int*)
@@ -298,8 +319,8 @@ glfwRestoreWindow: extern func(GLFWwindow*)
 glfwShowWindow: extern func(GLFWwindow*)
 glfwHideWindow: extern func(GLFWwindow*)
 glfwGetWindowMonitor: extern func(GLFWwindow*) -> GLFWmonitor* 
-glfwSetWindowUserPoInter: extern func(GLFWwindow*, Pointer) 
-glfwGetWindowUserPoInter: extern func(GLFWwindow*) -> Pointer
+glfwSetWindowUserPointer: extern func(GLFWwindow*, Pointer) 
+glfwGetWindowUserPointer: extern func(GLFWwindow*) -> Pointer
 glfwMakeContextCurrent: extern func(GLFWwindow*)
 glfwGetFramebufferSize: extern func(GLFWwindow*, Int*, Int*)
 glfwGetWindowFrameSize: extern func(GLFWwindow*, Int*, Int*, Int*, Int*)
@@ -321,24 +342,3 @@ glfwSetWindowSize: extern func(GLFWwindow*, Int, Int)
 
 glfwCreateCursor: extern func(_GLFWimage*, Int, Int) -> GLFWcursor* 
 glfwDestroyCursor: extern func(GLFWcursor*)
-
-_GLFWvidmode: cover from GLFWvidmode{
-    width:       extern Int 
-    height:      extern Int 
-    redBits:     extern Int 
-    greenBits:   extern Int 
-    blueBits:    extern Int 
-    refreshRate: extern Int 
-}
-_GLFWgammaramp: cover from GLFWgammaramp{
-    red:  extern UShort* 
-    green:extern UShort* 
-    blue: extern UShort* 
-    size: extern UInt 
-}
-_GLFWimage: cover from GLFWimage{
-    width: extern Int 
-    height: extern Int 
-    pixels: extern UChar* 
-}
-

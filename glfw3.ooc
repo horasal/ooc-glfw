@@ -4,6 +4,7 @@
  * Author: Hongjie Zhai
  */
 import native/glfw3api
+include GLFW/glfw3
 
 Image: cover from _GLFWimage
 Gammaramp: cover from _GLFWgammaramp
@@ -46,11 +47,9 @@ Monitor: cover from GLFWmonitor*{
         glfwSetGamma(this, gamma)
     }
 
-    gammaRamp: Gammaramp {
-        get{ glfwGetGammaRamp(this)@ as Gammaramp }
-        set(ramp){
-            glfwSetGammaRamp(this, ramp&)
-        }
+    getGammaRamp: func -> Gammaramp { glfwGetGammaRamp(this)@ as Gammaramp }
+    setGammaRamp: func(ramp: Gammaramp){
+        glfwSetGammaRamp(this, ramp&)
     }
 }
 
@@ -58,7 +57,7 @@ Monitor: cover from GLFWmonitor*{
  * GLFW window cover
  */
 Window: cover from GLFWwindow*{
-    create: static func(width, height: Int, title: String, monitor: Monitor, share: Window) -> This {
+    new: static func(width, height: Int, title: String, monitor: Monitor, share: Window) -> This {
         glfwCreateWindow(width, height, title toCString(), monitor, share) as This
     }
 
@@ -88,13 +87,13 @@ Window: cover from GLFWwindow*{
     }
 
     getWindowPos: func -> (Int, Int){
-            x, y: Int
-            glfwGetWindowPos(this, x&, y&)
-            (x,y)
+        x, y: Int
+        glfwGetWindowPos(this, x&, y&)
+        (x,y)
     }
     
     setWindowPos: func(x, y: Int){
-            glfwSetWindowPos(this, x, y)
+        glfwSetWindowPos(this, x, y)
     }
 
     getWindowSize: func -> (Int, Int){
@@ -103,23 +102,17 @@ Window: cover from GLFWwindow*{
         (x, y)
     }
 
-    setWindowSize: func(x, y: Int){
-        glfwSetWindowSize(this, x, y)
+    setWindowSize: func(x, y: Int){ glfwSetWindowSize(this, x, y) }
+    setWindowTitle: func(tit: String){ glfwSetWindowTitle(this, tit toCString())  }
+    getShouldClose: func -> Bool{ glfwWindowShouldClose(this) as Bool }
+    setShouldClose: func(state: Bool){ glfwSetWindowShouldClose(this, state as Int) }
+
+    getClipboardString: func -> String{
+        glfwGetClipboardString(this) as CString toString()
     }
 
-    title: String{
-        set(tit){ glfwSetWindowTitle(this, tit toCString())  }
-        get
-    }
-
-    shouldClose: Bool{
-        get{ glfwWindowShouldClose(this) as Bool }
-        set(state){ glfwSetWindowShouldClose(this, state as Int) }
-    }
-
-    clipboardString: String{
-        set(text){ glfwSetClipboardString(this, text toCString()) }
-        get{ glfwGetClipboardString(this) toString() }
+    setClipboardString: func(text: String){
+        glfwSetClipboardString(this, text toCString() as Pointer)
     }
 
     monitor: Monitor{
@@ -127,31 +120,24 @@ Window: cover from GLFWwindow*{
     }
 
     userPointer: Pointer{
-        get{ glfwGetWindowUserPoInter(this) }
-        set(p){ glfwSetWindowUserPoInter(this, p) }
+        get{ glfwGetWindowUserPointer(this) }
+        set(p){ glfwSetWindowUserPointer(this, p) }
     }
 
-    getFrameBufferSize: (Int, Int){
-        get{ 
-            x,y: Int
-            glfwGetFRameBufferSize(this, x&, y&)
-            (x,y)
-        }
+    getFrameBufferSize: func -> (Int, Int){
+        x,y: Int
+        glfwGetFramebufferSize(this, x&, y&)
+        (x,y)
     }
 
-    getWindowFrameSize: (Int, Int, Int, Int){
-        get{
-            x,y,z,h: Int
-            glfwGetWindowFrameSize(this, x&, y&, z&, h&)
-            (x,y,z,h)
-        }
+    getWindowFrameSize: func -> (Int, Int, Int, Int){
+        x,y,z,h: Int
+        glfwGetWindowFrameSize(this, x&, y&, z&, h&)
+        (x,y,z,h)
     }
 
-    cursor: Cursor{
-        get
-        set(c){
-            glfwSetCursor(this, cursor)
-        }
+    setCursor: func(cursor: Cursor){
+        glfwSetCursor(this, cursor)
     }
 }
 
