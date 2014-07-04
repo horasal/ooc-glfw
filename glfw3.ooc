@@ -320,76 +320,104 @@ glfwSetGammaRamp: extern func(GLFWmonitor*,  _GLFWgammaramp*)
  * GLFW window cover
  */
 GLFWwindow: extern cover
+
 Window: cover from GLFWwindow*{
-    create: static func(width, height: Int, title: String, monitor: Monitor, share: Window) -> Window {
-        glfwCreateWindow(width, height, title toCString(), monitor, share)
+    create: static func(width, height: Int, title: String, monitor: Monitor, share: Window) -> This {
+        glfwCreateWindow(width, height, title toCString(), monitor, share) as This
     }
+    destroy: func{ glfwDestroyWindow(this) }
 
-    makeContextCurrent: func{
-        glfwMakeContextCurrent(this)
-    }
+    makeContextCurrent: func{ glfwMakeContextCurrent(this) }
+    swapBuffers: func(){ glfwSwapBuffers(this) }
+    show: func(){ glfwShowWindow(this) }
+    hide: func(){ glfwHideWindow(this) }
+    restore: func(){ glfwRestoreWindow(this) }
+    iconify: func(){ glfwIconifyWindow(this) }
 
-    title: String{
-        set(tit){ 
-            glfwSetWindowTitle(this, tit toCString()) 
-        }
-    }
+    getKey: func(k: Int) -> Int{ glfwGetKey(this, k) }
+    getMouseButton: func(b: Int) -> Int{ glfwGetMouseButton(this, b) }
+    getWindowAttrib: func(pn: Int) -> Int{ glfwGetWindowAttrib(this, pn) }
+    getInputMode: func(n: Int) -> Int{ glfwGetInputMode(this, n) }
+    setInputMode: func(n,m: Int){ glfwSetInputMode(this, n, m) }
 
-    destroy: func{
-        glfwDestroyWindow(this)
+    title: String {
+        set(tit){ glfwSetWindowTitle(this, tit toCString())  }
+        get
     }
 
     shouldClose: Bool{
         get{ glfwWindowShouldClose(this) as Bool }
         set(state){ glfwSetWindowShouldClose(this, state as Int) }
     }
-    
-    show: func(){
-        glfwShowWindow(this)
-    }
-
-    hide: func(){
-        glfwHideWindow(this)
-    }
-
-    restore: func(){
-        glfwRestoreWindow(this)
-    }
-
-    iconify: func(){
-        glfwIconifyWindow(this)
-    }
 
     clipboardString: String{
-        get(text){
-            glfwSetClipboardString(this, text toCString())
-        }
-        set{
-            glfwGetClipboardString(this) toString()
+        set(text){ glfwSetClipboardString(this, text toCString()) }
+        get{ glfwGetClipboardString(this) toString() }
+    }
+
+    monitor: Monitor{
+        get{ glfwGetWindowMonitor(this) as Monitor }
+    }
+
+    userPointer: Pointer{
+        get{ glfwGetWindowUserPoInter(this) }
+        set(p){ glfwSetWindowUserPoInter(this, p) }
+    }
+
+    getFrameBufferSize: (Int, Int){
+        get{ 
+            x,y: Int
+            glfwGetFRameBufferSize(this, x&, y&)
+            (x,y)
         }
     }
 
+    getWindowFrameSize: (Int, Int, Int, Int){
+        get{
+            x,y,z,h: Int
+            glfwGetWindowFrameSize(this, x&, y&, z&, h&)
+            (x,y,z,h)
+        }
+    }
+
+    getCursorPos: func -> (Double, Double){
+        x, y: Double
+        glfwGetCursorPos(this, x&, y&)
+        (x,y)
+    }
+
+    setCursorPos: func(x, y: Double){
+        glfwSetCursorPos(this, x, y)
+    }
+
+    cursor: Cursor{
+        get
+        set(c){
+            glfwSetCursor(this, cursor)
+        }
+    }
+
+    getWindowPos: func -> (Int, Int){
+            x, y: Int
+            glfwGetWindowPos(this, x&, y&)
+            (x,y)
+    }
+    
+    setWindowPos: func(x, y: Int){
+            glfwSetWindowPos(this, x, y)
+    }
+
+    getWindowSize: func -> (Int, Int){
+        x, y: Int
+        glfwGetWindowSize(this, x&, y&)
+        (x, y)
+    }
+
+    setWindowSize: func(x, y: Int){
+        glfwSetWindowSize(this, x, y)
+    }
 }
 
-glfwCreateWindow: extern func(Int, Int,  Char*, GLFWmonitor*, GLFWwindow*) -> GLFWwindow* 
-glfwDestroyWindow: extern func(GLFWwindow*)
-glfwWindowShouldClose: extern func(GLFWwindow*) -> Int 
-glfwSetWindowShouldClose: extern func(GLFWwindow*, Int)
-glfwSetWindowTitle: extern func(GLFWwindow*,  Char*)
-glfwGetWindowPos: extern func(GLFWwindow*, Int*, Int*)
-glfwSetWindowPos: extern func(GLFWwindow*, Int, Int)
-glfwGetWindowSize: extern func(GLFWwindow*, Int*, Int*)
-glfwSetWindowSize: extern func(GLFWwindow*, Int, Int)
-glfwGetFramebufferSize: extern func(GLFWwindow*, Int*, Int*)
-glfwGetWindowFrameSize: extern func(GLFWwindow*, Int*, Int*, Int*, Int*)
-glfwIconifyWindow: extern func(GLFWwindow*)
-glfwRestoreWindow: extern func(GLFWwindow*)
-glfwShowWindow: extern func(GLFWwindow*)
-glfwHideWindow: extern func(GLFWwindow*)
-glfwGetWindowMonitor: extern func(GLFWwindow*) -> GLFWmonitor* 
-glfwGetWindowAttrib: extern func(GLFWwindow*, Int) -> Int 
-glfwSetWindowUserPoInter: extern func(GLFWwindow*, Pointer) 
-glfwGetWindowUserPoInter: extern func(GLFWwindow*) -> Pointer
 glfwSetWindowPosCallback: extern func(GLFWwindow*, Pointer) -> Pointer
 glfwSetWindowSizeCallback: extern func(GLFWwindow*, Pointer) -> Pointer
 glfwSetWindowCloseCallback: extern func(GLFWwindow*, Pointer) -> Pointer
@@ -405,7 +433,23 @@ glfwSetCursorPosCallback: extern func(GLFWwindow*, Pointer) -> Pointer
 glfwSetCursorEnterCallback: extern func(GLFWwindow*, Pointer) -> Pointer
 glfwSetScrollCallback: extern func(GLFWwindow*, Pointer) -> Pointer
 glfwSetDropCallback: extern func(GLFWwindow*, Pointer) -> Pointer
+
+glfwCreateWindow: extern func(Int, Int,  Char*, GLFWmonitor*, GLFWwindow*) -> GLFWwindow* 
+glfwDestroyWindow: extern func(GLFWwindow*)
+glfwWindowShouldClose: extern func(GLFWwindow*) -> Int 
+glfwSetWindowShouldClose: extern func(GLFWwindow*, Int)
+glfwSetWindowTitle: extern func(GLFWwindow*,  Char*)
+glfwIconifyWindow: extern func(GLFWwindow*)
+glfwRestoreWindow: extern func(GLFWwindow*)
+glfwShowWindow: extern func(GLFWwindow*)
+glfwHideWindow: extern func(GLFWwindow*)
+glfwGetWindowMonitor: extern func(GLFWwindow*) -> GLFWmonitor* 
+glfwSetWindowUserPoInter: extern func(GLFWwindow*, Pointer) 
+glfwGetWindowUserPoInter: extern func(GLFWwindow*) -> Pointer
 glfwMakeContextCurrent: extern func(GLFWwindow*)
+glfwGetFramebufferSize: extern func(GLFWwindow*, Int*, Int*)
+glfwGetWindowFrameSize: extern func(GLFWwindow*, Int*, Int*, Int*, Int*)
+glfwGetWindowAttrib: extern func(GLFWwindow*, Int) -> Int 
 glfwGetInputMode: extern func(GLFWwindow*, Int) -> Int 
 glfwSetInputMode: extern func(GLFWwindow*, Int, Int)
 glfwGetKey: extern func(GLFWwindow*, Int) -> Int 
@@ -416,7 +460,10 @@ glfwSwapBuffers: extern func(GLFWwindow*)
 glfwSetClipboardString: extern func(GLFWwindow*, Char*)
 glfwGetClipboardString: extern func(GLFWwindow*) -> Char* 
 glfwSetCursor: extern func(GLFWwindow*, GLFWcursor*)
-
+glfwGetWindowPos: extern func(GLFWwindow*, Int*, Int*)
+glfwSetWindowPos: extern func(GLFWwindow*, Int, Int)
+glfwGetWindowSize: extern func(GLFWwindow*, Int*, Int*)
+glfwSetWindowSize: extern func(GLFWwindow*, Int, Int)
 
 GLFWcursor: extern cover
 

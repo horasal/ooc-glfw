@@ -1,5 +1,4 @@
-import ./gl
-import ./glfw3
+import gl, glfw3
 
 getKey: func(w: GLFWwindow*, a,b,c,d: Int) {
     a toString() println()
@@ -14,16 +13,17 @@ main: func(args: String[]) -> Int{
         Exception new("Cann to create window") throw()
     }
 
-    glfwMakeContextCurrent(window)
+    window title = "Test2"
+
+    window makeContextCurrent()
 
     glfwSetKeyCallback(window, getKey&)
 
     time := glfwGetTime()
     frames: Int = 0
-    while (!glfwWindowShouldClose(window)){
+    while (!window shouldClose){
         ratio : Float
-        width, height : Int
-        glfwGetFramebufferSize(window, width&, height&)
+        (width, height) := window getFrameBufferSize()
         ratio = width / height
         glViewport(0, 0, width, height)
         glClear(GL_COLOR_BUFFER_BIT)
@@ -41,7 +41,7 @@ main: func(args: String[]) -> Int{
         glColor3f(0.f, 0.f, 1.f)
         glVertex3f(0.f, 0.6f, 0.f)
         glEnd()
-        glfwSwapBuffers(window)
+        window swapBuffers()
         glfwPollEvents()
         frames += 1
         if(glfwGetTime() - time > 3){
@@ -51,6 +51,6 @@ main: func(args: String[]) -> Int{
         }
     }
 
-    glfwDestroyWindow(window)
+    window destroy()
     glfwTerminate()
 }
