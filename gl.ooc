@@ -1,3 +1,7 @@
+/*
+ * OpenGL Bingings 
+ * Come From https://github.com/OneSadCookie/ooc-glew
+ */
 GLenum: extern cover from UInt
 GLbitfield: extern cover from UInt
 GLuint: extern cover from UInt
