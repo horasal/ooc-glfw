@@ -8,7 +8,7 @@ import gl
 import glfw3
 
 getKey: func(w: Window, a,b,c,d: Int) {
-    a toString() println()
+    if(a==256) w setShouldClose(true)
 }
 
 main: func(args: String[]) -> Int{
