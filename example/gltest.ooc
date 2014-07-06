@@ -16,7 +16,7 @@ main: func(args: String[]) -> Int{
     window := Window new(640, 480, "Test", null, null)
     if(!window){
         pro terminate()
-        Exception new("Cann to create window") throw()
+        Exception new("Can't create window") throw()
     }
 
     window setWindowTitle("Test2")
