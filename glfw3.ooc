@@ -231,11 +231,11 @@ Window: cover from GLFWwindow*{
  * GLFW Cursor cover
  */
 Cursor: cover from GLFWcursor*{
-    create: static func(image: Image, height, width: Int) -> Cursor {
+    new : static func(image: Image, height, width: Int) -> Cursor {
         glfwCreateCursor(image&, height, width)
     }
 
-    create: static func~pointer(image: Image*, x, y: Int) -> Cursor {
+    new: static func~pointer(image: Image*, x, y: Int) -> Cursor {
         glfwCreateCursor(image, x, y)
     }
 
