@@ -7,13 +7,18 @@ import native/glfw3api
 include GLFW/glfw3
 
 Image: cover from _GLFWimage
+
 Gammaramp: cover from _GLFWgammaramp
+
 Vidmode: cover from _GLFWvidmode
 
 glfw: class{
     init: func() { glfwInit() }
+
     terminate: func() { glfwTerminate() }
+
     getVersionString: func() -> String{ glfwGetVersionString() as CString toString() }
+
     getVersion: func() -> (Int, Int, Int) { 
         ma, mi, mo: Int
         glfwGetVersion(ma&, mi&, mo&)
@@ -28,34 +33,38 @@ glfw: class{
         count: Int
         m: Monitor[]
         m data = glfwGetMonitors(count&)
-        m rlength = count
-        m unitSize = Monitor size
+        m length = count
         m
     }
 
     defaultWindowHints: func(){ glfwDefaultWindowHints() }
+
     windowHint: func(target, hint: Int){ glfwWindowHint(target, hint) }
+
     pollEvents: func() { glfwPollEvents() }
+
     waitEvents: func() { glfwWaitEvents() }
+
     postEmptyEvent: func() { glfwPostEmptyEvent() }
 
     joystickPresent: func(target: Int) -> Bool{ glfwJoystickPresent(target) as Bool }
+
     joystickAxes: func(joy: Int) -> Float[] {
         count: Int
         axes: Float[]
         axes data = glfwGetJoystickAxes(joy, count&)
-        axes rlength = count
-        axes unitSize = Float size
+        axes length = count
         axes
     }
+
     joystickButtons: func(joy: Int) -> UChar[]{
         count: Int
         r : UChar[]
         r data = glfwGetJoystickButtons(joy, count&)
-        r rlength = count
-        r unitSize = UChar size
+        r length = count
         r
     }
+
     joystickName: func(joy: Int) -> String{
         glfwGetJoystickName(joy) as CString toString()
     }
@@ -80,7 +89,7 @@ glfw: class{
     }
 }
 
-/**
+/*
  * GLFW monitor cover
  */
 Monitor: cover from GLFWmonitor*{
@@ -104,8 +113,7 @@ Monitor: cover from GLFWmonitor*{
         r: Vidmode[]
         count: Int
         r data = glfwGetVideoModes(this, count&)
-        r rlength = count
-        r unitSize = Vidmode size
+        r length = count
         r
     }
 
@@ -118,6 +126,7 @@ Monitor: cover from GLFWmonitor*{
     }
 
     getGammaRamp: func -> Gammaramp { glfwGetGammaRamp(this)@ as Gammaramp }
+
     setGammaRamp: func(ramp: Gammaramp){
         glfwSetGammaRamp(this, ramp&)
     }
@@ -134,16 +143,25 @@ Window: cover from GLFWwindow*{
     destroy: func{ glfwDestroyWindow(this) }
 
     makeContextCurrent: func{ glfwMakeContextCurrent(this) }
+
     swapBuffers: func(){ glfwSwapBuffers(this) }
+
     show: func(){ glfwShowWindow(this) }
+
     hide: func(){ glfwHideWindow(this) }
+
     restore: func(){ glfwRestoreWindow(this) }
+
     iconify: func(){ glfwIconifyWindow(this) }
 
     getKey: func(k: Int) -> Int{ glfwGetKey(this, k) }
+
     getMouseButton: func(b: Int) -> Int{ glfwGetMouseButton(this, b) }
+
     getWindowAttrib: func(pn: Int) -> Int{ glfwGetWindowAttrib(this, pn) }
+
     getInputMode: func(n: Int) -> Int{ glfwGetInputMode(this, n) }
+
     setInputMode: func(n,m: Int){ glfwSetInputMode(this, n, m) }
 
     getCursorPos: func -> (Double, Double){

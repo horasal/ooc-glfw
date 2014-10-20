@@ -8,11 +8,20 @@ import gl
 import glfw3
 
 getKey: func(w: Window, a,b,c,d: Int) {
-    if(a==256) w setShouldClose(true)
+    match(a){
+        case 256 => w setShouldClose(true)
+        case => return
+    }
 }
 
 main: func(args: String[]) -> Int{
     pro := glfw new()
+    mon := pro monitors()
+    for(i in 0..mon length){
+        "------------------" println()
+        mon[i] name() println()
+    }
+
     window := Window new(640, 480, "Test", null, null)
     if(!window){
         pro terminate()
