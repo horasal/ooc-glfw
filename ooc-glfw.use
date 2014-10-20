@@ -1,0 +1,5 @@
+Name: ooc-glfw
+Description: GLFW binding for ooc programming language
+SourcePath: .
+Imports: ./native/glfw3api,glfw3,gl
+Libs: -lGL,-lglfw

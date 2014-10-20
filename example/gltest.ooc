@@ -5,7 +5,7 @@
  * rock `pkg-config --cflags --libs glfw3 gl` example/gltest.ooc
  */
 import gl
-import glfw3
+use ooc-glfw
 
 getKey: func(w: Window, a,b,c,d: Int) {
     match(a){
